@@ -56,18 +56,21 @@ export default {
         // { msg, ststus } = { msg:"11", status : 200}
         // // =>
         // msg:11 ststus:200
-        // const {
-        //   data,
-        //   meta: { msg, status }
-        // } = res.data
-        // if (status === 200) {
-        // }
-        // 登录成功
-        // 1.跳转home
-        // this.$router.push((name: 'home'))
-        // 2.提示成功
-        // 不成功
-        // 1.提示消息
+        const {
+          data,
+          meta: { msg, status }
+        } = res.data
+        if (status === 200) {
+          // 登录成功
+          // 1.跳转home
+          // this.$router.push((name: 'home'))
+          // 2.提示成功
+          this.$message.success(msg)
+        } else {
+          // 不成功
+          // 1.提示消息
+          this.$message.warning(msg)
+        }
       })
     }
   }
