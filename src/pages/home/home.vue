@@ -133,6 +133,7 @@ export default {
 .main {
   background-color: #e9eef3;
   height: 100%;
+  overflow-y:hidden;
 }
 /* 头部样式 */
 .logo {
