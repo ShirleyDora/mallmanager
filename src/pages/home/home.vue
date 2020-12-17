@@ -12,22 +12,25 @@
         </el-col>
         <el-col :span="2">
           <div>
-            <a class="loginout" href="#" @click.prevent="handleSignout()">退出</a>
+            <a class="loginout" href="#" @click.prevent="handleSignout()"
+              >退出</a
+            >
           </div>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
+      <!-- 侧边栏导航 -->
       <el-aside class="aside" width="200px">
-        <!-- 侧边栏导航 -->
-        <el-menu :unique-opened="true">
+        <!-- 开启路由导航，侧边栏只保持一个子菜单的展开 -->
+        <el-menu :unique-opened="true" :router="true">
           <!-- 用户管理 -->
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-1">
+            <el-menu-item index="users">
               <i class="el-icon-circle-check"></i>
               <span>用户列表</span>
             </el-menu-item>
@@ -82,7 +85,10 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main class="main">Main</el-main>
+      <!-- 导航内容区域 -->
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -95,7 +101,7 @@ export default {
     const token = localStorage.getItem('token')
     if (!token) {
       // token 没有 -》登录
-      this.$router.push({name: 'login'})
+      this.$router.push({ name: 'login' })
       this.$message.warning('您还没有登录，请先登录！')
     }
     // if token 有 -》继续渲染组件
@@ -108,7 +114,7 @@ export default {
       // 提示
       this.$message.success('退出成功')
       // 来到login页面
-      this.$router.push({name: 'login'})
+      this.$router.push({ name: 'login' })
     }
   }
 }
