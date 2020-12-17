@@ -18,9 +18,13 @@
     </el-row>
     <!-- 3.表格 -->
     <el-table :data="tableData" style="width: 100%;">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
+      <el-table-column type="index" label="#" width="60"></el-table-column>
+      <el-table-column prop="name" label="姓名"></el-table-column>
+      <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column prop="phone" label="电话"></el-table-column>
+      <el-table-column prop="date" label="创建时间"></el-table-column>
+      <el-table-column prop="status" label="用户状态"></el-table-column>
+      <el-table-column prop="option" label="操作"></el-table-column>
     </el-table>
     <!-- 4.分页 -->
   </el-card>
@@ -35,14 +39,20 @@ export default {
       // 表格绑定的数据
       tableData: [
         {
-          date: '2016-05-02',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          email: '111@123.com',
+          phone: '11111111111',
+          date: '2016-05-02',
+          status: 1,
+          option: 1
         },
         {
-          date: '2016-05-04',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
+          email: '111@123.com',
+          phone: '11111111111',
+          date: '2016-05-02',
+          status: 1,
+          option: 1
         }
       ]
     }
