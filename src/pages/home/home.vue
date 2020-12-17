@@ -12,7 +12,7 @@
         </el-col>
         <el-col :span="2">
           <div>
-            <a class="loginout" href="#">退出</a>
+            <a class="loginout" href="#" @click.prevent="handleSignout()">退出</a>
           </div>
         </el-col>
       </el-row>
@@ -99,6 +99,17 @@ export default {
       this.$message.warning('您还没有登录，请先登录！')
     }
     // if token 有 -》继续渲染组件
+  },
+  methods: {
+    // 退出功能
+    handleSignout () {
+      // 清除token
+      localStorage.clear()
+      // 提示
+      this.$message.success('退出成功')
+      // 来到login页面
+      this.$router.push({name: 'login'})
+    }
   }
 }
 </script>
