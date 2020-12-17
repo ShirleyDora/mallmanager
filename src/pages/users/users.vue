@@ -34,7 +34,16 @@
           {{ scope.row.create_time | fmtdate }}
         </template>
       </el-table-column>
-      <el-table-column prop="mg_state" label="用户状态"></el-table-column>
+      <el-table-column prop="mg_state" label="用户状态">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.mg_state"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
       <el-table-column prop="" label="操作"></el-table-column>
     </el-table>
     <!-- 4.分页 -->
