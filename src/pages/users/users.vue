@@ -24,7 +24,16 @@
       <el-table-column prop="role_name" label="管理权限"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="mobile" label="电话"></el-table-column>
-      <el-table-column prop="create_time" label="创建时间"></el-table-column>
+      <el-table-column label="创建时间">
+        <!-- {{create_time|fmtdate}} -->
+        <!-- 如果单元格的显示的内容不是字符串(文本)，需要给被现实的内容外层包裹一个template -->
+        <!-- template内部要用数据，设置slot-scope属性，该属性的值是要用create_time的数据源userlist -->
+        <!-- slot-scope的值userlist其实就是el-table绑定的数据userlist,
+        user-list.row->数组中的每个对象 -->
+        <template slot-scope="scope">
+          {{ scope.row.create_time | fmtdate }}
+        </template>
+      </el-table-column>
       <el-table-column prop="mg_state" label="用户状态"></el-table-column>
       <el-table-column prop="" label="操作"></el-table-column>
     </el-table>
