@@ -47,6 +47,7 @@
       <el-table-column prop="mg_state" label="用户状态">
         <template slot-scope="scope">
           <el-switch
+            @change="changeMgState(scope.row)"
             v-model="scope.row.mg_state"
             active-color="#13ce66"
             inactive-color="#ff4949"
@@ -227,6 +228,34 @@ export default {
         this.$message.warning(msg)
       }
     },
+    // 修改用户状态
+    async changeMgState (user) {
+      // 发送请求
+      // eslint-disable-next-line no-unused-vars
+      const res = await this.$http.put(
+        // 1.mg_state=false
+        // 2.点开关->mg_state=true
+        `users/${user.id}/state/${user.mg_state}`)
+      // console.log(res)
+    },
+    // 编辑用户
+    // 编辑用户-打开对话框
+    showEditUserDia (user) {
+      // 获取用户数据
+      this.formUser = user
+      this.dialogFormVisibleEdit = true
+    },
+    // 编辑用户-发送请求
+    async editUser () {
+      // users/:id
+      // eslint-disable-next-line no-unused-vars
+      const res = await this.$http.put(`users/${this.formUser.id}`, this.formUser)
+      console.log(res)
+      // 1.关闭对话框
+      this.dialogFormVisibleEdit = false
+      // 2.更新视图
+      this.getUserList()
+    },
     // 删除用户
     // 删除用户-打开消息盒子弹框
     showDeleteUserMsgBox (userId) {
@@ -257,24 +286,7 @@ export default {
         })
       })
     },
-    // 编辑用户
-    // 编辑用户-打开对话框
-    showEditUserDia (user) {
-      // 获取用户数据
-      this.formUser = user
-      this.dialogFormVisibleEdit = true
-    },
-    // 编辑用户-发送请求
-    async editUser () {
-      // users/:id
-      // eslint-disable-next-line no-unused-vars
-      const res = await this.$http.put(`users/${this.formUser.id}`, this.formUser)
-      console.log(res)
-      // 1.关闭对话框
-      this.dialogFormVisibleEdit = false
-      // 2.更新视图
-      this.getUserList()
-    },
+
     // 分页相关的方法
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
