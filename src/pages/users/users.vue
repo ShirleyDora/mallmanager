@@ -57,7 +57,7 @@
       <el-table-column prop="" label="操作" width="140">
         <template slot-scope="scope">
           <el-button
-            @click="showEditUserDia()"
+            @click="showEditUserDia(scope.row)"
             class="edit"
             size="mini"
             plain
@@ -126,7 +126,7 @@
     <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="formUser">
         <el-form-item label="用户名" label-width="100px">
-          <el-input v-model="formUser.username" autocomplete="off"></el-input>
+          <el-input disabled v-model="formUser.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="100px">
           <el-input v-model="formUser.email" autocomplete="off"></el-input>
@@ -184,7 +184,7 @@ export default {
         email: '',
         mobile: ''
       },
-      // 修改对话框的属性
+      // 编辑对话框的属性
       dialogFormVisibleEdit: false
     }
   },
@@ -254,9 +254,11 @@ export default {
         })
       })
     },
-    // 修改用户
-    // 修改用户-打开对话框
-    showEditUserDia () {
+    // 编辑用户
+    // 编辑用户-打开对话框
+    showEditUserDia (user) {
+      // 获取用户数据
+      this.formUser = user
       this.dialogFormVisibleEdit = true
     },
     // 分页相关的方法
