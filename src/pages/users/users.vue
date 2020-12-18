@@ -74,6 +74,15 @@
       </el-table-column>
     </el-table>
     <!-- 4.分页 -->
+     <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[2, 4, 6, 8]"
+      :page-size="2"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="100">
+    </el-pagination>
   </el-card>
 </template>
 
@@ -95,13 +104,21 @@ export default {
       // 分页相关数据
       total: -1,
       pagenum: 1,
-      pagesize: 2
+      pagesize: 2,
+      currentPage: 4
     }
   },
   created () {
     this.getUserList()
   },
   methods: {
+    // 分页相关的方法
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+    },
     // 获取用户列表的请求
     async getUserList () {
       // query 查询参数 可以为空
