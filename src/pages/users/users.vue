@@ -76,11 +76,12 @@
             circle
           ></el-button>
           <el-button
+            @click="showSetUserRoleDia(scope.row)"
             class="check"
             size="mini"
             plain
             type="success"
-            icon="el-icon-check"
+            icon="el-icon-user"
             circle
           ></el-button>
         </template>
@@ -127,7 +128,11 @@
     <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="formUser">
         <el-form-item label="用户名" label-width="100px">
-          <el-input disabled v-model="formUser.username" autocomplete="off"></el-input>
+          <el-input
+            disabled
+            v-model="formUser.username"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="100px">
           <el-input v-model="formUser.email" autocomplete="off"></el-input>
@@ -139,6 +144,27 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
         <el-button type="primary" @click="editUser()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 5.3分配用户角色的对话框 -->
+    <el-dialog title="分配角色" :visible.sync="dialogFormVisibleRole">
+      <el-form :model="formUser">
+        <el-form-item label="用户名" label-width="100px">
+          {{ "当前用户的用户名" }}
+        </el-form-item>
+        <el-form-item label="角色" label-width="100px">
+          <!-- 如果select的绑定的数据的值和option的value一样，就会显示该option的label值 -->
+          <el-select v-model="currentRoleId" placeholder="请选择角色">
+            <el-option label="请选择" :value="-1"></el-option>
+            <!-- <el-option label="角色名称" value="shanghai"></el-option> -->
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleRole = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleRole = false"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </el-card>
@@ -158,16 +184,18 @@ export default {
       // mobile: (...)
       // role_name: (...)
       // username: (...)
-      userlist: [{
-        id: 1,
-        username: '',
-        mobile: '',
-        type: 1,
-        email: '',
-        create_time: '',
-        mg_state: true,
-        role_name: ''
-      }],
+      userlist: [
+        {
+          id: 1,
+          username: '',
+          mobile: '',
+          type: 1,
+          email: '',
+          create_time: '',
+          mg_state: true,
+          role_name: ''
+        }
+      ],
       // 分页相关数据
       total: -1,
       pagenum: 1,
@@ -186,8 +214,11 @@ export default {
         mobile: ''
       },
       // 编辑对话框的属性
-      dialogFormVisibleEdit: false
-
+      dialogFormVisibleEdit: false,
+      // 分配角色的属性
+      dialogFormVisibleRole: false,
+      // 下拉选择框
+      currentRoleId: -1
     }
   },
   created () {
@@ -216,7 +247,9 @@ export default {
       this.dialogFormVisibleAdd = false
       const res = await this.$http.post(`users`, this.formUser)
       console.log(res)
-      const {meta: {msg, status}} = res.data
+      const {
+        meta: { msg, status }
+      } = res.data
       if (status === 201) {
         // 1.提示成功
         this.$message.success(msg)
@@ -235,7 +268,8 @@ export default {
       const res = await this.$http.put(
         // 1.mg_state=false
         // 2.点开关->mg_state=true
-        `users/${user.id}/state/${user.mg_state}`)
+        `users/${user.id}/state/${user.mg_state}`
+      )
       // console.log(res)
     },
     // 编辑用户
@@ -249,7 +283,10 @@ export default {
     async editUser () {
       // users/:id
       // eslint-disable-next-line no-unused-vars
-      const res = await this.$http.put(`users/${this.formUser.id}`, this.formUser)
+      const res = await this.$http.put(
+        `users/${this.formUser.id}`,
+        this.formUser
+      )
       console.log(res)
       // 1.关闭对话框
       this.dialogFormVisibleEdit = false
@@ -263,30 +300,36 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        // 发送删除的请求 :id----->用户id
-        // 1.data中找userId
-        // 2.把userId以showDeleteUserMsgBox参数形式传进来
-        const res = await this.$http.delete(`users/${userId}`)
-        console.log(res)
-        if (res.data.meta.status === 200) {
-          this.pagenum = 1
-          // 更新视图
-          this.getUserList()
-          // 提示
-          this.$message({
-            type: 'success',
-            message: res.data.meta.msg
-          })
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
+        .then(async () => {
+          // 发送删除的请求 :id----->用户id
+          // 1.data中找userId
+          // 2.把userId以showDeleteUserMsgBox参数形式传进来
+          const res = await this.$http.delete(`users/${userId}`)
+          console.log(res)
+          if (res.data.meta.status === 200) {
+            this.pagenum = 1
+            // 更新视图
+            this.getUserList()
+            // 提示
+            this.$message({
+              type: 'success',
+              message: res.data.meta.msg
+            })
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
-
+    // 分配角色
+    // 分配角色-打开对话框
+    showSetUserRoleDia (user) {
+      this.dialogFormVisibleRole = true
+    },
     // 分页相关的方法
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
