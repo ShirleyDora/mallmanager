@@ -65,6 +65,7 @@
             circle
           ></el-button>
           <el-button
+            @click="showDeleteUserMsgBox()"
             class="delete"
             size="mini"
             plain
@@ -102,7 +103,11 @@
           <el-input v-model="formUser.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="100px">
-          <el-input v-model="formUser.password" autocomplete="off" show-password></el-input>
+          <el-input
+            v-model="formUser.password"
+            autocomplete="off"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="100px">
           <el-input v-model="formUser.email" autocomplete="off"></el-input>
@@ -113,9 +118,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="addUser()"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="addUser()">确 定</el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -169,7 +172,7 @@ export default {
       this.getUserList()
     },
     // 添加用户
-    // 添加用户-显示对话框
+    // 添加用户-打开对话框
     showAddUserDia () {
       this.dialogFormVisibleAdd = true
     },
@@ -190,6 +193,25 @@ export default {
       } else {
         this.$message.warning(msg)
       }
+    },
+    // 删除用户
+    // 删除用户-打开消息盒子弹框
+    showDeleteUserMsgBox () {
+      this.$confirm('删除用户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 分页相关的方法
     handleSizeChange (val) {
