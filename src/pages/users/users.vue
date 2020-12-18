@@ -57,6 +57,7 @@
       <el-table-column prop="" label="操作" width="140">
         <template slot-scope="scope">
           <el-button
+            @click="showEditUserDia()"
             class="edit"
             size="mini"
             plain
@@ -96,7 +97,7 @@
     >
     </el-pagination>
     <!-- 5.对话框 -->
-    <!-- 添加用户的对话框 -->
+    <!-- 5.1添加用户的对话框 -->
     <el-dialog title="添加用户" :visible.sync="dialogFormVisibleAdd">
       <el-form :model="formUser">
         <el-form-item label="用户名" label-width="100px">
@@ -119,6 +120,24 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
         <el-button type="primary" @click="addUser()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 5.2编辑用户的对话框 -->
+    <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleEdit">
+      <el-form :model="formUser">
+        <el-form-item label="用户名" label-width="100px">
+          <el-input v-model="formUser.username" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="100px">
+          <el-input v-model="formUser.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" label-width="100px">
+          <el-input v-model="formUser.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleEdit = false">确 定</el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -164,7 +183,9 @@ export default {
         password: '',
         email: '',
         mobile: ''
-      }
+      },
+      // 修改对话框的属性
+      dialogFormVisibleEdit: false
     }
   },
   created () {
@@ -232,6 +253,11 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 修改用户
+    // 修改用户-打开对话框
+    showEditUserDia () {
+      this.dialogFormVisibleEdit = true
     },
     // 分页相关的方法
     handleSizeChange (val) {
