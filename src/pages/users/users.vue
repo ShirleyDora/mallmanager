@@ -154,9 +154,10 @@
         </el-form-item>
         <el-form-item label="角色" label-width="100px">
           <!-- 如果select的绑定的数据的值和option的value一样，就会显示该option的label值 -->
-          <el-select v-model="currentRoleId" placeholder="请选择角色">
+          {{currentRoleId}}
+          <el-select v-model="currentRoleId">
             <el-option label="请选择" :value="-1"></el-option>
-            <!-- <el-option label="角色名称" value="shanghai"></el-option> -->
+            <el-option :label="item" :value="i" v-for="(item,i) in 5" :key="i"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -218,7 +219,7 @@ export default {
       // 分配角色的属性
       dialogFormVisibleRole: false,
       // 下拉选择框
-      currentRoleId: -1
+      currentRoleId: 0
     }
   },
   created () {
