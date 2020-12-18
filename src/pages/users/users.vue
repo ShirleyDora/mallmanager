@@ -27,7 +27,7 @@
       </el-col>
     </el-row>
     <!-- 3.表格 -->
-    <el-table :data="userlist" style="width: 100%;">
+    <el-table :data="userlist" style="width: 100%;" max-height="600">
       <el-table-column type="index" label="#" width="60"></el-table-column>
       <el-table-column prop="username" label="姓名"></el-table-column>
       <el-table-column prop="id" label="工号"></el-table-column>
@@ -150,14 +150,14 @@
     <el-dialog title="分配角色" :visible.sync="dialogFormVisibleRole">
       <el-form :model="formUser">
         <el-form-item label="用户名" label-width="100px">
-          {{ "当前用户的用户名" }}
+          {{ currentUsername }}
         </el-form-item>
         <el-form-item label="角色" label-width="100px">
           <!-- 如果select的绑定的数据的值和option的value一样，就会显示该option的label值 -->
           {{currentRoleId}}
           <el-select v-model="currentRoleId">
             <el-option label="请选择" :value="-1"></el-option>
-            <el-option :label="item" :value="i" v-for="(item,i) in 5" :key="i"></el-option>
+            <el-option :label="item.roleName" :value="i" v-for="(item,i) in roles" :key="i"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -219,7 +219,11 @@ export default {
       // 分配角色的属性
       dialogFormVisibleRole: false,
       // 下拉选择框
-      currentRoleId: 0
+      currentRoleId: 0,
+      // 当前用户的用户名
+      currentUsername: '',
+      // 保存所有角色数据
+      roles: []
     }
   },
   created () {
@@ -328,7 +332,17 @@ export default {
     },
     // 分配角色
     // 分配角色-打开对话框
-    showSetUserRoleDia (user) {
+    async showSetUserRoleDia (user) {
+      // 当前用户的用户名
+      this.currentUsername = user.username
+      // 获取所有的角色
+      const res1 = await this.$http.get('roles')
+      console.log(res1)
+      this.roles = res1.data.data
+      // 获取当前用户的角色id ->rid
+      const res = await this.$http.get(`users/${user.id}`)
+      console.log(res)
+      this.currentRoleId = res.data.data.rid
       this.dialogFormVisibleRole = true
     },
     // 分页相关的方法
