@@ -137,7 +137,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleEdit = false">确 定</el-button>
+        <el-button type="primary" @click="editUser()">确 定</el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -186,6 +186,7 @@ export default {
       },
       // 编辑对话框的属性
       dialogFormVisibleEdit: false
+
     }
   },
   created () {
@@ -204,6 +205,8 @@ export default {
     // 添加用户
     // 添加用户-打开对话框
     showAddUserDia () {
+      // 清空对话框
+      this.formUser = {}
       this.dialogFormVisibleAdd = true
     },
     // 添加用户-发送请求
@@ -260,6 +263,17 @@ export default {
       // 获取用户数据
       this.formUser = user
       this.dialogFormVisibleEdit = true
+    },
+    // 编辑用户-发送请求
+    async editUser () {
+      // users/:id
+      // eslint-disable-next-line no-unused-vars
+      const res = await this.$http.put(`users/${this.formUser.id}`, this.formUser)
+      console.log(res)
+      // 1.关闭对话框
+      this.dialogFormVisibleEdit = false
+      // 2.更新视图
+      this.getUserList()
     },
     // 分页相关的方法
     handleSizeChange (val) {
