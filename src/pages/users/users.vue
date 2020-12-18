@@ -113,7 +113,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleAdd = false"
+        <el-button type="primary" @click="addUser()"
           >确 定</el-button
         >
       </div>
@@ -169,8 +169,27 @@ export default {
       this.getUserList()
     },
     // 添加用户
+    // 添加用户-显示对话框
     showAddUserDia () {
       this.dialogFormVisibleAdd = true
+    },
+    // 添加用户-发送请求
+    async addUser () {
+      // 2.关闭对话框
+      this.dialogFormVisibleAdd = false
+      const res = await this.$http.post(`users`, this.formUser)
+      console.log(res)
+      const {meta: {msg, status}} = res.data
+      if (status === 201) {
+        // 1.提示成功
+        this.$message.success(msg)
+        // 3.更新视图
+        this.getUserList()
+        // 4.清空文本框
+        this.formUser = {}
+      } else {
+        this.$message.warning(msg)
+      }
     },
     // 分页相关的方法
     handleSizeChange (val) {
