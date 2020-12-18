@@ -77,11 +77,11 @@
      <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage"
+      :current-page="pagenum"
       :page-sizes="[2, 4, 6, 8]"
       :page-size="2"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="100">
+      :total="total">
     </el-pagination>
   </el-card>
 </template>
@@ -104,8 +104,7 @@ export default {
       // 分页相关数据
       total: -1,
       pagenum: 1,
-      pagesize: 2,
-      currentPage: 4
+      pagesize: 2
     }
   },
   created () {
