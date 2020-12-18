@@ -114,9 +114,13 @@ export default {
     // 分页相关的方法
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
+      this.pagesize = val
+      this.getUserList()
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
+      this.pagenum = val
+      this.getUserList()
     },
     // 获取用户列表的请求
     async getUserList () {
