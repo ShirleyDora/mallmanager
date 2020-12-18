@@ -65,7 +65,7 @@
             circle
           ></el-button>
           <el-button
-            @click="showDeleteUserMsgBox()"
+            @click="showDeleteUserMsgBox(scope.row.id)"
             class="delete"
             size="mini"
             plain
@@ -138,7 +138,16 @@ export default {
       // mobile: (...)
       // role_name: (...)
       // username: (...)
-      userlist: [],
+      userlist: [{
+        id: 1,
+        username: '',
+        mobile: '',
+        type: 1,
+        email: '',
+        create_time: '',
+        mg_state: true,
+        role_name: ''
+      }],
       // 分页相关数据
       total: -1,
       pagenum: 1,
@@ -196,16 +205,27 @@ export default {
     },
     // 删除用户
     // 删除用户-打开消息盒子弹框
-    showDeleteUserMsgBox () {
+    showDeleteUserMsgBox (userId) {
       this.$confirm('删除用户?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+      }).then(async () => {
+        // 发送删除的请求 :id----->用户id
+        // 1.data中找userId
+        // 2.把userId以showDeleteUserMsgBox参数形式传进来
+        const res = await this.$http.delete(`users/${userId}`)
+        console.log(res)
+        if (res.data.meta.status === 200) {
+          this.pagenum = 1
+          // 更新视图
+          this.getUserList()
+          // 提示
+          this.$message({
+            type: 'success',
+            message: res.data.meta.msg
+          })
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
