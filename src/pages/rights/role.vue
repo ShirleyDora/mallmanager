@@ -15,17 +15,18 @@
         <template slot-scope="scope">
           <el-row v-for="(item1, i) in scope.row.children" :key="i">
             <el-col :span="4">
-              <el-tag closable>{{ item1.authName }}</el-tag>
+              <!-- 传角色id和权限id -->
+              <el-tag @close="deleteRight(scope.row,item1.id)" closable>{{ item1.authName }}</el-tag>
               <i class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="20">
               <el-row v-for="(item2, i) in item1.children" :key="i">
                 <el-col :span="4">
-                  <el-tag type="success" closable>{{ item2.authName }}</el-tag>
+                  <el-tag type="success" @close="deleteRight(scope.row,item2.id)" closable>{{ item2.authName }}</el-tag>
                   <i class="el-icon-arrow-right"></i></el-col
                 >
                 <el-col :span="20"
-                  ><el-tag v-for="(item3, i) in item2.children" :key="i" type="warning" closable>{{
+                  ><el-tag v-for="(item3, i) in item2.children" :key="i" type="warning"  @close="deleteRight(scope.row,item3.id)" closable>{{
                     item3.authName
                   }}</el-tag>
                 </el-col>
@@ -91,10 +92,24 @@ export default {
     this.getRoleList()
   },
   methods: {
+    // 取消权限
+    async deleteRight (role, rightId) {
+      // roles/:roleId/rights/:rightId
+      // roleId当前角色的id
+      // rightId要删除的权限id
+      const res = await this.$http.delete(`roles/${role.id}/rights/${rightId}`)
+      console.log(res)
+      // 重新渲染视图
+      role.children = res.data.data
+      // this.getRoleList()
+      this.$message.success('取消权限成功')
+    },
+    // 获取列表数据
     async getRoleList () {
       const res = await this.$http.get(`roles`)
-      console.log(res)
+      // console.log(res)
       this.rolelist = res.data.data
+      console.log(this.rolelist)
     }
   }
 }
