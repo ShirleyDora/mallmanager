@@ -93,7 +93,25 @@
     </el-table>
     <!-- 修改权限的对话框 -->
     <el-dialog title="修改权限" :visible.sync="dialogFormVisibleRight">
-      <!-- 树形结构 -->
+      <!-- 树形结构
+        data->数据源[]
+        show-checkbox->选择框
+        node-key每个节点的唯一标识，通常是data数据源中key名id
+        default-expanded-keys默认展开[要展开的节点的id]
+        default-checked-keys[要选择的节点的id]
+        props配置项{label,children}
+        label节点的文字标题和children节点的子节点
+        值都来源于data绑定的数据源中的该数据的key名'label'和'children'
+        :default-expanded-keys="[2, 3]"
+        :default-checked-keys="[5]"
+      -->
+      <el-tree
+        :data="treelist"
+        show-checkbox
+        node-key="id"
+        :props="defaultProps"
+      >
+      </el-tree>
       <!-- 取消确定按钮 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleRight = false">取 消</el-button>
@@ -110,17 +128,31 @@ export default {
   data () {
     return {
       rolelist: [],
-      dialogFormVisibleRight: false
+      dialogFormVisibleRight: false,
+      // 树形结构的数据
+      treelist: [],
+      defaultProps: {
+        label: 'authName',
+        children: 'children'
+      }
     }
   },
   created () {
     this.getRoleList()
   },
   methods: {
+    // 获取树形结构的权限数据
+    async getSetRightList () {
+      const res = await this.$http.get(`rights/tree`)
+      console.log(res)
+      this.treelist = res.data.data
+    },
+
     // 修改/分配权限
     // 修改/分配权限-打开对话框
     showSetRightDia (role) {
       this.dialogFormVisibleRight = true
+      this.getSetRightList()
     },
     // 取消权限
     async deleteRight (role, rightId) {
