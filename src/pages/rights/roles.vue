@@ -64,22 +64,6 @@
       <el-table-column prop="" label="操作">
         <template slot-scope="scope">
           <el-button
-            class="edit"
-            size="mini"
-            plain
-            type="primary"
-            icon="el-icon-edit"
-            circle
-          ></el-button>
-          <el-button
-            class="delete"
-            size="mini"
-            plain
-            type="danger"
-            icon="el-icon-delete"
-            circle
-          ></el-button>
-          <el-button
             @click="showSetRightDia(scope.row)"
             class="check"
             size="mini"
