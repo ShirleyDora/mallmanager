@@ -12,7 +12,26 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      rightlist: []
+    }
+  },
+  created () {
+    this.getRightList()
+  },
+  methods: {
+    async getRightList () {
+      const AUTH_TOKEN = localStorage.getItem('token')
+      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      const res = await this.$http.get(`rights/list`)
+      console.log(res)
+      this.rightlist = res.data.data
+    }
+
+  }
+}
 </script>
 
 <style scoped>
