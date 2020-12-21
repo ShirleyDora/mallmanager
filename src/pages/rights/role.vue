@@ -16,25 +16,37 @@
           <el-row v-for="(item1, i) in scope.row.children" :key="i">
             <el-col :span="4">
               <!-- 传角色id和权限id -->
-              <el-tag @close="deleteRight(scope.row,item1.id)" closable>{{ item1.authName }}</el-tag>
+              <el-tag @close="deleteRight(scope.row, item1.id)" closable>{{
+                item1.authName
+              }}</el-tag>
               <i class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="20">
               <el-row v-for="(item2, i) in item1.children" :key="i">
                 <el-col :span="4">
-                  <el-tag type="success" @close="deleteRight(scope.row,item2.id)" closable>{{ item2.authName }}</el-tag>
-                  <i class="el-icon-arrow-right"></i></el-col
-                >
+                  <el-tag
+                    type="success"
+                    @close="deleteRight(scope.row, item2.id)"
+                    closable
+                    >{{ item2.authName }}</el-tag
+                  >
+                  <i class="el-icon-arrow-right"></i
+                ></el-col>
                 <el-col :span="20"
-                  ><el-tag v-for="(item3, i) in item2.children" :key="i" type="warning"  @close="deleteRight(scope.row,item3.id)" closable>{{
-                    item3.authName
-                  }}</el-tag>
+                  ><el-tag
+                    v-for="(item3, i) in item2.children"
+                    :key="i"
+                    type="warning"
+                    @close="deleteRight(scope.row, item3.id)"
+                    closable
+                    >{{ item3.authName }}</el-tag
+                  >
                 </el-col>
               </el-row>
             </el-col>
           </el-row>
           <!-- 无权限的提示 -->
-          <span v-if="scope.row.children.length===0">未分配权限</span>
+          <span v-if="scope.row.children.length === 0">未分配权限</span>
         </template>
       </el-table-column>
       <!-- 序号 -->
@@ -68,6 +80,7 @@
             circle
           ></el-button>
           <el-button
+            @click="showSetRightDia(scope.row)"
             class="check"
             size="mini"
             plain
@@ -78,6 +91,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 修改权限的对话框 -->
+    <el-dialog title="修改权限" :visible.sync="dialogFormVisibleRight">
+      <!-- 树形结构 -->
+      <!-- 取消确定按钮 -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleRight = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleRight = false"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -85,13 +109,19 @@
 export default {
   data () {
     return {
-      rolelist: []
+      rolelist: [],
+      dialogFormVisibleRight: false
     }
   },
   created () {
     this.getRoleList()
   },
   methods: {
+    // 修改/分配权限
+    // 修改/分配权限-打开对话框
+    showSetRightDia (role) {
+      this.dialogFormVisibleRight = true
+    },
     // 取消权限
     async deleteRight (role, rightId) {
       // roles/:roleId/rights/:rightId
