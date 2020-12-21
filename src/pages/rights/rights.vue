@@ -23,8 +23,7 @@ export default {
   },
   methods: {
     async getRightList () {
-      const AUTH_TOKEN = localStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      // 除了登录之外的所有请求，都需要设置头部
       const res = await this.$http.get(`rights/list`)
       console.log(res)
       this.rightlist = res.data.data

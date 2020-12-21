@@ -377,8 +377,8 @@ export default {
       // pagenum 当前页面 不能为空
       // pagesize 每页显示条数 不能为空
       // 需要授权的API,必须在请求头中使用 Authorization 字段提供 token 令牌
-      const AUTH_TOKEN = localStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      // const AUTH_TOKEN = localStorage.getItem('token')
+      // this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
       console.log(this.query)
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`
