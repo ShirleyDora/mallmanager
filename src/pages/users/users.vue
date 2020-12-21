@@ -30,8 +30,6 @@
     <el-table :data="userlist" style="width: 100%;" max-height="600">
       <el-table-column type="index" label="#" width="60"></el-table-column>
       <el-table-column prop="username" label="姓名"></el-table-column>
-      <el-table-column prop="id" label="工号"></el-table-column>
-      <el-table-column prop="role_name" label="管理权限"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="mobile" label="电话"></el-table-column>
       <el-table-column label="创建时间">
@@ -154,7 +152,6 @@
         </el-form-item>
         <el-form-item label="角色" label-width="100px">
           <!-- 如果select的绑定的数据的值和option的value一样，就会显示该option的label值 -->
-          {{currentRoleId}}
           <el-select v-model="currentRoleId">
             <el-option label="请选择" :value="-1"></el-option>
             <el-option :label="item.roleName" :value="i" v-for="(item,i) in roles" :key="i"></el-option>
@@ -163,7 +160,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleRole = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleRole = false"
+        <el-button type="primary" @click="setRole()"
           >确 定</el-button
         >
       </div>
@@ -219,11 +216,14 @@ export default {
       // 分配角色的属性
       dialogFormVisibleRole: false,
       // 下拉选择框
-      currentRoleId: 0,
+      currentRoleId: -1,
       // 当前用户的用户名
       currentUsername: '',
+      // 当前用户的角色id
+      currentUserId: -1,
       // 保存所有角色数据
       roles: []
+
     }
   },
   created () {
@@ -335,6 +335,8 @@ export default {
     async showSetUserRoleDia (user) {
       // 当前用户的用户名
       this.currentUsername = user.username
+      // 当前用户的Id
+      this.currentUserId = user.id
       // 获取所有的角色
       const res1 = await this.$http.get('roles')
       console.log(res1)
@@ -344,6 +346,18 @@ export default {
       console.log(res)
       this.currentRoleId = res.data.data.rid
       this.dialogFormVisibleRole = true
+    },
+
+    // 分配角色-修改用户角色
+    async setRole () {
+      // 发送请求
+      // users/:id/role,:id要修改的用户的id值，请求体中rid修改的新值角色id
+      const res = await this.$http.put(`users/${this.currentUserId}/role`, {
+        rid: this.currentRoleId
+      })
+      console.log(res)
+      // 关闭对话框
+      this.dialogFormVisibleRole = false
     },
     // 分页相关的方法
     handleSizeChange (val) {
