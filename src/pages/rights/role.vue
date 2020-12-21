@@ -106,6 +106,7 @@
         :default-checked-keys="[5]"
       -->
       <el-tree
+        ref="tree"
         :data="treelist"
         show-checkbox
         node-key="id"
@@ -117,9 +118,7 @@
       <!-- 取消确定按钮 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleRight = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleRight = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="setRoleRight()">确 定</el-button>
       </div>
     </el-dialog>
   </el-card>
@@ -138,13 +137,47 @@ export default {
         children: 'children'
       },
       // arrexpand: [],
-      arrcheck: []
+      arrcheck: [],
+      currentRoleId: -1
     }
   },
   created () {
     this.getRoleList()
   },
   methods: {
+    // 修改权限-发送请求
+    async setRoleRight () {
+      // roleId 当前要修改权限的角色id
+      // rids树形节点中所有全选和半选的label的id[]
+      // 获取全选的id的数据arr1 getCheckedKeys()
+      let arr1 = this.$refs.tree.getCheckedKeys()
+      console.log(arr1)
+      // 获取半选的id数据arr2 getHalfCheckedKeys()
+      let arr2 = this.$refs.tree.getHalfCheckedKeys()
+      console.log(arr2)
+      // arr=arr1+arr2
+      // arr1.concat(arr2)
+      let arr = [...arr1, ...arr2]
+      console.log(arr)
+      const res = await this.$http.post(`roles/${this.currentRoleId}/rights`, {rids: arr.join(',')})
+      console.log(res)
+      // 对话框关闭
+      this.dialogFormVisibleRight = false
+      // 重新渲染视图
+      this.getRoleList()
+      // this.getRoleList()
+      this.$message.success('修改权限成功')
+      // el-tree标签的js方法
+      // el-tree.get
+      // div -> js方法/属性innerText
+      // 1.获取div->DOM元素
+      // 2.DOM.innerText
+      // var div = document.getElementById('div')
+      // div.innerText
+      // el-tree->js方法getCheckedKeys
+      // 1.给要操作的dom元素设置ref属性值 input ref="txt"
+      // 2.this.$refs.ref属性值.js方法名() this.$refs.txt.focus()
+    },
     // 获取树形结构的权限数据
     async getSetRightList (role) {
       const res = await this.$http.get(`rights/tree`)
@@ -165,11 +198,11 @@ export default {
       // this.arrexpand = arrtemp1
       // 获取当前角色role的权限id
       let arrtemp2 = []
-      role.children.forEach(item1 => {
+      role.children.forEach((item1) => {
         // arrtemp2.push(item1.id)
-        item1.children.forEach(item2 => {
+        item1.children.forEach((item2) => {
           // arrtemp2.push(item2.id)
-          item2.children.forEach(item3 => {
+          item2.children.forEach((item3) => {
             arrtemp2.push(item3.id)
           })
         })
@@ -184,6 +217,7 @@ export default {
       console.log(role)
       this.dialogFormVisibleRight = true
       this.getSetRightList(role)
+      this.currentRoleId = role.id
     },
     // 取消权限
     async deleteRight (role, rightId) {
