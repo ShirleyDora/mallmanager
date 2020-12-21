@@ -13,7 +13,27 @@
       <!-- 展开行 -->
       <el-table-column type="expand" width="150">
         <template slot-scope="scope">
-
+          <el-row v-for="(item1, i) in scope.row.children" :key="i">
+            <el-col :span="4">
+              <el-tag closable>{{ item1.authName }}</el-tag>
+              <i class="el-icon-arrow-right"></i>
+            </el-col>
+            <el-col :span="20">
+              <el-row v-for="(item2, i) in item1.children" :key="i">
+                <el-col :span="4">
+                  <el-tag type="success" closable>{{ item2.authName }}</el-tag>
+                  <i class="el-icon-arrow-right"></i></el-col
+                >
+                <el-col :span="20"
+                  ><el-tag v-for="(item3, i) in item2.children" :key="i" type="warning" closable>{{
+                    item3.authName
+                  }}</el-tag>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+          <!-- 无权限的提示 -->
+          <span v-if="scope.row.children.length===0">未分配权限</span>
         </template>
       </el-table-column>
       <!-- 序号 -->
