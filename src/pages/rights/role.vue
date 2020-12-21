@@ -102,13 +102,15 @@
         props配置项{label,children}
         label节点的文字标题和children节点的子节点
         值都来源于data绑定的数据源中的该数据的key名'label'和'children'
-        :default-expanded-keys="[2, 3]"
+        :default-expanded-keys="arrexpand" arrexpand=[2,5]
         :default-checked-keys="[5]"
       -->
       <el-tree
         :data="treelist"
         show-checkbox
         node-key="id"
+        default-expand-all
+        :default-checked-keys="arrcheck"
         :props="defaultProps"
       >
       </el-tree>
@@ -134,7 +136,9 @@ export default {
       defaultProps: {
         label: 'authName',
         children: 'children'
-      }
+      },
+      // arrexpand: [],
+      arrcheck: []
     }
   },
   created () {
@@ -142,17 +146,44 @@ export default {
   },
   methods: {
     // 获取树形结构的权限数据
-    async getSetRightList () {
+    async getSetRightList (role) {
       const res = await this.$http.get(`rights/tree`)
       console.log(res)
       this.treelist = res.data.data
+      // 默认全部展开
+      // var arrtemp1 = []
+      // this.treelist.forEach(item1 => {
+      //   arrtemp1.push(item1.id)
+      //   item1.children.forEach(item2 => {
+      //     arrtemp1.push(item2.id)
+      //     item2.children.forEach(item3 => {
+      //       arrtemp1.push(item3.id)
+      //     })
+      //   })
+      // })
+      // console.log(arrtemp1)
+      // this.arrexpand = arrtemp1
+      // 获取当前角色role的权限id
+      let arrtemp2 = []
+      role.children.forEach(item1 => {
+        // arrtemp2.push(item1.id)
+        item1.children.forEach(item2 => {
+          // arrtemp2.push(item2.id)
+          item2.children.forEach(item3 => {
+            arrtemp2.push(item3.id)
+          })
+        })
+      })
+      console.log(arrtemp2)
+      this.arrcheck = arrtemp2
     },
 
     // 修改/分配权限
     // 修改/分配权限-打开对话框
     showSetRightDia (role) {
+      console.log(role)
       this.dialogFormVisibleRight = true
-      this.getSetRightList()
+      this.getSetRightList(role)
     },
     // 取消权限
     async deleteRight (role, rightId) {
