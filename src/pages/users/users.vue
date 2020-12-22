@@ -2,11 +2,12 @@
   <el-card class="box-card">
     <!-- 1.面包屑 -->
     <!-- 首页/用户管理/用户列表 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
+    <my-bread level1="用户管理" level2="用户列表"></my-bread>
     <!-- 2.搜索 -->
     <el-row class="searchRow">
       <el-col>
@@ -376,8 +377,8 @@ export default {
       // pagenum 当前页面 不能为空
       // pagesize 每页显示条数 不能为空
       // 需要授权的API,必须在请求头中使用 Authorization 字段提供 token 令牌
-      const AUTH_TOKEN = localStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      // const AUTH_TOKEN = localStorage.getItem('token')
+      // this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
       console.log(this.query)
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`
