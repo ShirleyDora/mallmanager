@@ -3,13 +3,13 @@
     <!-- 面包屑导航区域 -->
     <my-bread level1="订单管理" level2="订单列表"></my-bread>
     <!-- 卡片视图区域 -->
-    <el-row class="searchRow">
+    <!-- <el-row class="searchRow">
       <el-col :span="8">
         <el-input placeholder="请输入内容">
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <!-- 订单列表数据 -->
     <el-table :data="orderlist" border stripe max-height="450px">
@@ -43,12 +43,8 @@
             type="primary"
             icon="el-icon-edit"
             @click="showBox"
-          ></el-button>
-          <el-button
-            size="mini"
-            type="success"
-            icon="el-icon-location"
-            @click="showProgressBox"
+            plain
+            circle
           ></el-button>
         </template>
       </el-table-column>
@@ -98,9 +94,9 @@
   </el-dialog>
 
   <!-- 展示物流进度的对话框 -->
-  <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
+  <!-- <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%"> -->
     <!-- 时间线 -->
-    <el-timeline>
+    <!-- <el-timeline>
       <el-timeline-item
         v-for="(activity, index) in progressInfo"
         :key="index"
@@ -109,11 +105,13 @@
         {{ activity.context }}
       </el-timeline-item>
     </el-timeline>
-  </el-dialog>
+  </el-dialog> -->
   </el-card>
 </template>
 
 <script>
+// .vue引入 .js库(swiper.js/zepto.js/iscroll.js/wow.js(整屏滚动))
+import cityData from '@/assets/js/citydata.js'
 export default {
   data () {
     return {
@@ -137,7 +135,7 @@ export default {
           { required: true, message: '请填写详细地址', trigger: 'blur' }
         ]
       },
-      // cityData,
+      cityData,
       progressVisible: false,
       progressInfo: []
     }
@@ -146,6 +144,7 @@ export default {
     this.getOrderList()
   },
   methods: {
+    // 获取订单列表数据
     async getOrderList () {
       const { data: res } = await this.$http.get('orders', {
         params: this.queryInfo
@@ -173,19 +172,20 @@ export default {
     },
     addressDialogClosed () {
       this.$refs.addressFormRef.resetFields()
-    },
-    async showProgressBox () {
-      const { data: res } = await this.$http.get('/kuaidi/804909574412544580')
-
-      if (res.meta.status !== 200) {
-        return this.$message.error('获取物流进度失败！')
-      }
-
-      this.progressInfo = res.data
-
-      this.progressVisible = true
-      console.log(this.progressInfo)
     }
+    // },
+    // async showProgressBox () {
+    //   const { data: res } = await this.$http.get('/kuaidi/804909574412544580')
+
+    //   if (res.meta.status !== 200) {
+    //     return this.$message.error('获取物流进度失败！')
+    //   }
+
+    //   this.progressInfo = res.data
+
+    //   this.progressVisible = true
+    //   console.log(this.progressInfo)
+    // }
   }
 }
 </script>
