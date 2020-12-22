@@ -25,7 +25,7 @@
         <!-- 开启路由导航，侧边栏只保持一个子菜单的展开 -->
         <el-menu :unique-opened="true" :router="true">
           <!-- 动态获取菜单数据 -->
-          <el-submenu :index="item1.order" v-for="(item1,index) in menus" :key="index">
+          <el-submenu :index="item1.order.toString()" v-for="(item1,index) in menus" :key="index">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{item1.authName}}</span>
@@ -106,17 +106,17 @@
 
 <script>
 export default {
-  // newVue之前自动触发
-  beforeCreate () {
-    // 获取token
-    const token = localStorage.getItem('token')
-    if (!token) {
-      // token 没有 -》登录
-      this.$router.push({ name: 'login' })
-      this.$message.warning('您还没有登录，请先登录！')
-    }
-    // if token 有 -》继续渲染组件
-  },
+  // // newVue之前自动触发
+  // beforeCreate () {
+  //   // 获取token
+  //   const token = localStorage.getItem('token')
+  //   if (!token) {
+  //     // token 没有 -》登录
+  //     this.$router.push({ name: 'login' })
+  //     this.$message.warning('您还没有登录，请先登录！')
+  //   }
+  //   // if token 有 -》继续渲染组件
+  // },
   data () {
     return {
       menus: []
